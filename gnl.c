@@ -124,8 +124,8 @@ char *gnl(int fd)
 	if(!buff)
 		return NULL;
 	hold = before_new_line(buff);
-	buff = 
-	(buff);
+	buff = after_new_line(buff);
+
 	return hold;
 }
 
