@@ -35,13 +35,13 @@ int find_new_line(char *str)
 
 char *ft_substr(char *str, int s, int e)
 {
-	char *ret = malloc(e + 1);
+	int i = 0;
+	char *ret = malloc(e - s + 1);
 	while(s <= e)
 	{
-		ret[s] = str[s];
-		s++;
+		ret[i++] = str[s++];
 	}
-	ret[s] = '\0';
+	ret[i] = '\0';
 	return ret;
 }
 
@@ -103,12 +103,13 @@ char *before_new_line(char *str)
 
 char *after_new_line(char *str)
 {
-	int s = ft_new_len(str);
-	int e = ft_strlen(str);
-
+	char *ss;
+	int s = ft_new_len(str)+ 1;
+	int e = ft_strlen(str) + 1;
 	if (str[s] == '\0')
 		return NULL;
-	return (ft_substr(str, s, e));
+	ss = ft_substr(str, s, e);
+	return (ss);
 }
 
 char *gnl(int fd)
@@ -124,8 +125,10 @@ char *gnl(int fd)
 	if(!buff)
 		return NULL;
 	hold = before_new_line(buff);
+	char *s = buff;
 	buff = after_new_line(buff);
-
+	free(s);
+	free(buff);
 	return hold;
 }
 
@@ -141,7 +144,8 @@ int main()
 	char *str3 = gnl(fd);
 	printf("---> %s\n", str);
 	printf("---> %s\n", str1);
-	printf("---> %s\n", str2);
-	printf("---> %s\n", str3);
+	// printf("---> %s\n", str2);
+	// printf("---> %s\n", str3);
+	gnl(-1);
 	close(fd);
 }
