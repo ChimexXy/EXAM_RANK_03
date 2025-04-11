@@ -125,10 +125,7 @@ char *gnl(int fd)
 	if(!buff)
 		return NULL;
 	hold = before_new_line(buff);
-	char *s = buff;
 	buff = after_new_line(buff);
-	free(s);
-	free(buff);
 	return hold;
 }
 
