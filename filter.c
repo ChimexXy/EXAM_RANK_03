@@ -1,3 +1,4 @@
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -15,6 +16,11 @@ char *ft_join(char *s1, char *s2)
     int i = 0;
     int j = 0;
     char *ret = malloc(ft_len(s1) + ft_len(s2) + 1);
+	if (!ret)
+	{
+		free(ret);
+		return NULL;
+	}
     while(s1[i])
     {
         ret[i] = s1[i];
@@ -58,31 +64,56 @@ void    ft_findstr(char *str, char *av)
             if (av[j] == '\0')
                 ft_putnajm(av);
             else
+			{
                 i = i - j;
+        		write(1 ,&str[i], 1);
+				i++;
+			}
         }
-        write(1 ,&str[i], 1);
-        i++;
+		else
+		{
+        	write(1 ,&str[i], 1);
+        	i++;
+		}
     }
 }
 int main(int ac, char **av)
 {
-    char *str = malloc(1);
-    char *str2 = malloc(6);
-    int bytes_read;
-    if (!str)
-    {
-        perror("Error");
-        return 1;
-    }
-    str[0] = '\0';
-    while ((bytes_read = read(0, str2, 5)) > 0)
-    {
-        str2[bytes_read] = '\0';
-        str = ft_join(str, str2);
-        if (!str)
-            return 1;
-    }
-    ft_findstr(str, av[1]);
-    free(str);
-    return 0;
+	if (ac != 2 || av[1][0] == '\0')
+		return 1;
+	char *buff = malloc(2);
+	char *join = malloc(1);
+
+	if(!buff || !join)
+	{
+		write(2, "Error\n", 6);
+		free (buff);
+		free (join);
+		return 1;
+	}
+	int r;
+	join[0] = '\0';
+	while ((r = read(0, buff, 1)) > 0)
+	{
+		buff[r] = '\0';
+		join = ft_join(join, buff);
+		if(!join)
+		{
+			write(2, "Error\n", 6);
+			free (buff);
+			free (join);
+			return 1;
+		}
+	}
+	if(r == -1)
+	{
+		write(2, "Error\n", 6);
+		free (buff);
+		free (join);
+		return 1;
+	}
+	ft_findstr(join, av[1]);
+	free (join);
+	free (buff);
+	return 1;
 }
