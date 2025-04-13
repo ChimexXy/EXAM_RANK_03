@@ -41,7 +41,53 @@ int check_int(char **str, int ac)
 	return 1;
 }
 
+void print_set(int *tab)
+{
+	int i = 0;
+	while(tab[i])
+	{
+		printf("%d ", tab[i]);
+		i++;
+	}
+		printf("\n");
+}
 
+void powerset(int *tab, int ac)
+{
+	int i = 1;
+	int r = 1;
+	int sum = 0;
+	while(i < ac)
+	{
+		int m = i;
+		int *set = malloc(sizeof(int) * ac);
+		if(tab[m])
+		{
+		int j = m + 1;
+			while(tab[j])
+			{
+				sum = tab[m] + tab[j];
+				set[0] = tab[i];
+				set[r] = tab[j];
+				if(sum > tab[0])
+				{
+					// free(set[r]);
+					sum -= tab[j];
+					// r--;
+				}
+				if(sum == tab[0])
+				{
+					print_set(set);
+					free(set);
+					break;
+				}
+				r++;
+				j++;
+			}
+		}
+		i++;
+	}
+}
 
 int main(int ac, char **av)
 {
@@ -56,4 +102,6 @@ int main(int ac, char **av)
 		i++;
 		j++;
 	}
+	tab[j] = '\0';
+	powerset(tab, ac);
 }
