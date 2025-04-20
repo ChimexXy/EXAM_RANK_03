@@ -1,4 +1,4 @@
-#include "gnl.h"
+#icnlude "gnl.h"
 
 int ft_strlen(char *str)
 {
@@ -76,7 +76,6 @@ char *read_line(int fd, char *ret)
 	int r = 1;
 	char *buff = malloc(BUFFER_SIZE + 1);
 
-	int i = 0;
 	while(r > 0)
 	{
 		r = read(fd, buff, BUFFER_SIZE);
@@ -97,12 +96,16 @@ char *read_line(int fd, char *ret)
 
 char *before_new_line(char *str)
 {
+	if (!str || ft_strlen(str) == 0)
+		return NULL;
 	int i = ft_new_len(str + 1);
 	return (ft_substr(str, 0, i));
 }
 
 char *after_new_line(char *str)
 {
+	if (!str || ft_strlen(str) == 0)
+		return NULL;
 	char *ss;
 	int s = ft_new_len(str)+ 1;
 	int e = ft_strlen(str) + 1;
@@ -127,22 +130,4 @@ char *gnl(int fd)
 	hold = before_new_line(buff);
 	buff = after_new_line(buff);
 	return hold;
-}
-
-
-int main()
-{
-	int fd;
-	int i = 0;
-	fd = open("test.txt", O_RDONLY);
-	char *str = gnl(fd);
-	char *str1 = gnl(fd);
-	char *str2 = gnl(fd);
-	char *str3 = gnl(fd);
-	printf("---> %s\n", str);
-	printf("---> %s\n", str1);
-	// printf("---> %s\n", str2);
-	// printf("---> %s\n", str3);
-	gnl(-1);
-	close(fd);
 }
