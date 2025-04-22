@@ -1,7 +1,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-// Writes a string followed by a newline
 void ft_putstr(char *str)
 {
     int i = 0;
@@ -10,7 +9,6 @@ void ft_putstr(char *str)
     write(1, "\n", 1);
 }
 
-// Check if input string only contains '(' and ')'
 int check_av(char *av)
 {
     int i = 0;
