@@ -1,133 +1,174 @@
-#icnlude "gnl.h"
+#include "get_next_line.h"
 
 int ft_strlen(char *str)
 {
-	int i = 0;
-	while(str[i])
-		i++;
-	return i;
-}
-
-int ft_new_len(char *str)
-{
-	int i = 0;
-	while(str[i])
-	{
-		if(str[i] == '\n')
-			return i;
-		i++;
-	}
-	
-	return i;
+    int i = 0;
+    while(str[i])
+        i++;
+    return i;
 }
 
 int find_new_line(char *str)
 {
-	int i = 0;
-	while(str[i])
-	{
-		if(str[i] == '\n')
-			return 1;
-		i++;
-	}
-	return 0;
+    int i = 0;
+    while(str[i])
+    {
+        if(str[i] == '\n')
+            return 0;
+        i++;
+    }
+    return 1;
 }
 
+int count_new_line(char *str)
+{
+    int i = 0;
+    while(str[i])
+    {
+        if(str[i] == '\n')
+            return i;
+        i++;
+    }
+    return i;
+}
+
+char *ft_strdup(char *str)
+{
+    int i = 0;
+    char *ret = malloc(ft_strlen(str) + 1);
+    if(!ret)
+        return NULL;
+    while(str[i])
+    {
+        ret[i] = str[i];
+        i++;
+    }
+	ret[i] = '\0';
+    return ret;
+}
 char *ft_substr(char *str, int s, int e)
 {
-	int i = 0;
-	char *ret = malloc(e - s + 1);
-	while(s <= e)
-	{
-		ret[i++] = str[s++];
-	}
-	ret[i] = '\0';
-	return ret;
+    int i = 0;
+    char *ret = malloc(e - s + 1);
+    if(!ret || !str)
+    {
+        free(ret);
+        return NULL;
+    }
+    while(s < e)
+    {
+        ret[i] = str[s];
+        s++;
+        i++;
+    }
+    ret[i] = '\0';
+    return ret;
 }
 
 char *ft_strjoin(char *s1, char *s2)
 {
-	int i = 0;
-	int j = 0;
-
-	if (!s1)
-		return(ft_substr(s2, 0, ft_strlen(s2)));
-	if (!s2)
-		return(ft_substr(s1, 0, ft_strlen(s1)));
-	char *ret = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	while(s1[i])
-	{
-		ret[i] = s1[i];
-		i++;
-	}
-	while(s2[j])
-	{
-		ret[i] = s2[j];
-		i++;
-		j++;
-	}
-	ret[i] = '\0';
-	free(s1);
-	return (ret); 
+    int i = 0;
+    int j = 0;
+    if(!s1)
+        return (ft_strdup(s2));
+    if(!s2)
+        return (ft_strdup(s1));
+    char *ret = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+    if(!ret)
+        return NULL;
+    while(s1[i])
+    {
+        ret[i] = s1[i];
+        i++;
+    }
+    while(s2[j])
+    {
+        ret[i] = s2[j];
+        i++;
+        j++;
+    }
+    ret[i] = '\0';
+    free(s1);
+    return (ret);
 }
 
-char *read_line(int fd, char *ret)
+
+char *read_line(int fd, char *hold)
 {
-	int r = 1;
-	char *buff = malloc(BUFFER_SIZE + 1);
-
-	while(r > 0)
-	{
-		r = read(fd, buff, BUFFER_SIZE);
-		buff[r] = '\0';
-		ret = ft_strjoin(ret, buff);
-		if (!ret)
-		{
-			free(buff);
-			free(ret);
-			return NULL;
-		}
-		if(find_new_line(ret))
-			break ;
-	}
-	free(buff);
-	return ret;
+    int r = 1;
+    char *buff = malloc(BUFFER_SIZE + 1);
+    if(!buff)
+    {
+        free(buff);
+        return NULL;
+    }
+    while(r > 0)
+    {
+        r = read(fd, buff, BUFFER_SIZE);
+        buff[r] = '\0';
+        hold = ft_strjoin(hold, buff);
+        if (!hold)
+        {
+            free(buff);
+            return NULL;
+        }
+        if(!find_new_line(hold))
+            break;
+    }
+    free(buff);
+    return hold;
 }
 
-char *before_new_line(char *str)
+char *before_new_line(char *buff)
 {
-	if (!str || ft_strlen(str) == 0)
-		return NULL;
-	int i = ft_new_len(str + 1);
-	return (ft_substr(str, 0, i));
+    if(buff[0] == '\0')
+    {
+        free (buff);
+        return NULL;
+    }
+    int e = count_new_line(buff);
+    return (ft_substr(buff, 0, e + 1));
 }
 
-char *after_new_line(char *str)
+char *after_new_line(char *buff)
 {
-	if (!str || ft_strlen(str) == 0)
-		return NULL;
-	char *ss;
-	int s = ft_new_len(str)+ 1;
-	int e = ft_strlen(str) + 1;
-	if (str[s] == '\0')
-		return NULL;
-	ss = ft_substr(str, s, e);
-	return (ss);
+    if(buff[0] == '\0')
+        return NULL;
+    int s = count_new_line(buff);
+    int e = ft_strlen(buff);
+	char *str = ft_substr(buff, s + 1, e + 1);
+    return (free(buff), str);
 }
 
-char *gnl(int fd)
+char    *get_next_line(int fd)
 {
-	static char *buff;
-	char *hold;
-	if(fd < 0 || BUFFER_SIZE <= 0)
-	{
-		free(buff);
-		return NULL;
-	}
-	buff = read_line(fd, buff);
-	if(!buff)
-		return NULL;
-	hold = before_new_line(buff);
-	buff = after_new_line(buff);
-	return hold;
+    static char *hold;
+    char *buff;
+    if(fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+    {
+        free (hold);
+		hold = NULL;
+        return NULL;
+    }
+    hold = read_line(fd, hold);
+    if (hold == '\0')
+    {
+        free(hold);
+		hold = NULL;
+        return NULL;
+    }
+    buff = before_new_line(hold);
+    hold = after_new_line(hold);
+    return (buff);
 }
+
+// int main()
+// {
+//     int fd = open("test.txt", O_RDONLY);
+//     // char *str1 = get_next_line(fd);	
+//     printf("%s", get_next_line(fd));
+//     printf("%s", get_next_line(fd));
+//     printf("%s", get_next_line(fd));
+//     printf("%s", get_next_line(fd));
+//     printf("%s", get_next_line(fd));
+// }
