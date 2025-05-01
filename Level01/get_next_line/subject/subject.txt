@@ -1,0 +1,13 @@
+Disclaimer: This file was originally transcribed by hand onto 
+paper and then digitized again. It is highly likely that additional 
+errors were introduced during these transcription processes due 
+to the large volume of text. Nonetheless most of the weird coding 
+choices like indentation errors are from the original file.
+
+Since your task is to correct errors in this subject, I believe 
+this won't pose a significant issue. The purpose of this piece 
+of code is to help you grasp the general concept of the subject 
+"Broken GNL." Additionally these subjects are still undergoing 
+updates and changes, so prepare for the details to be different.
+
+I did not copy the actual subject. But it did go along the line 

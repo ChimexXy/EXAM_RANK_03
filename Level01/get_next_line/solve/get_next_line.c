@@ -161,14 +161,3 @@ char    *get_next_line(int fd)
     hold = after_new_line(hold);
     return (buff);
 }
-
-// int main()
-// {
-//     int fd = open("test.txt", O_RDONLY);
-//     // char *str1 = get_next_line(fd);	
-//     printf("%s", get_next_line(fd));
-//     printf("%s", get_next_line(fd));
-//     printf("%s", get_next_line(fd));
-//     printf("%s", get_next_line(fd));
-//     printf("%s", get_next_line(fd));
-// }
