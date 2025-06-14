@@ -46,8 +46,10 @@ void print_set(int *tab, int size)
     int i = 0;
     while (i < size)
     {
-        printf("%d ", tab[i]);
+        printf("%d", tab[i]);
         i++;
+	if ( i < size)
+        	printf(" ");
     }
     printf("\n");
 }
